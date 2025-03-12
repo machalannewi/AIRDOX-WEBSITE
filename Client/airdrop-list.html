@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airdrop List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: radial-gradient(circle, #0d1b2a, #1b263b);
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Header */
+        h1 {
+            font-size: 2.5em;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Airdrop Container */
+        .airdrop-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Individual Airdrop Item */
+        .airdrop {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .airdrop:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Links */
+        .airdrop a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #00c6ff;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .airdrop a:hover {
+            color: #ffcc00;
+            text-shadow: 0 0 8px rgba(255, 204, 0, 0.8);
+        }
+
+        /* Reward Info */
+        .reward {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            .airdrop-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Latest Airdrops</h1>
+    <div id="airdrop-list" class="airdrop-container">Loading...</div>
+
+    <script>
+      async function fetchAirdrops() {
+          try {
+              const response = await fetch('http://localhost:5000/api/airdrops'); // Request backend data
+              const data = await response.json();
+
+              const listContainer = document.getElementById('airdrop-list');
+              listContainer.innerHTML = ""; // Clear previous content
+
+              data.forEach(airdrop => {
+                  const item = document.createElement('div');
+                  item.classList.add('airdrop');
+                  item.innerHTML = `
+                      <h3>${airdrop.title}</h3>
+                      <p class="reward">Reward: ${airdrop.amount} ${airdrop.currency}</p>
+                      <a href="${airdrop.link}" target="_blank">Claim Airdrop</a>
+                  `;
+                  listContainer.appendChild(item);
+              });
+
+          } catch (error) {
+              document.getElementById('airdrop-list').innerHTML = "Failed to load airdrops.";
+              console.error("Error fetching airdrops:", error);
+          }
+      }
+      fetchAirdrops();
+    </script>
+
+</body>
+</html>
